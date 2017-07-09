@@ -1,5 +1,6 @@
-variable "access_key" {}
-variable "secret_key" {}
+variable "aws_profile" {
+  default = "rxplatformrefresh"
+}
 variable "region" {
   default = "eu-west-1"
 }
