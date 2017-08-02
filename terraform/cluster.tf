@@ -32,11 +32,30 @@ resource "aws_iam_role" "cluster-iam-role" {
 }
 
 resource "aws_iam_role_policy_attachment" "cluster-iam-role-policy-attachment" {
-    role = "${aws_iam_role.cluster-iam-role.name}"
-    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
+  role = "${aws_iam_role.cluster-iam-role.name}"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 }
 
 resource "aws_iam_instance_profile" "cluster-iam-profile" {
   name = "${var.stack_name}-cluster"
   role = "${aws_iam_role.cluster-iam-role.name}"
+}
+
+resource "aws_security_group" "cluster-security-group" {
+  name = "${var.stack_name}"
+  desription = "Controls access to/from the ECS cluster instances"
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "6"
+    cidr_blocks = ["92.3.216.110/32"]
+  }
+
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
+  }
 }
