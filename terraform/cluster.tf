@@ -1,8 +1,3 @@
-provider "aws" {
-  profile = "${var.aws_profile}"
-  region = "${var.region}"
-}
-
 resource "aws_ecs_cluster" "cluster" {
   name = "${var.stack_name}"
 }
@@ -12,7 +7,7 @@ resource "aws_autoscaling_group" "cluster-asg" {
   max_size = "${var.cluster_instance_count}"
   min_size = "${var.cluster_instance_count}"
   launch_configuration = "${aws_launch_configuration.cluster-lc.name}"
-  vpc_zone_identifier = ["subnet-06391c5f", "subnet-98b357fc"]
+  vpc_zone_identifier = ["subnet-0fcb9256", "subnet-0fcb9256", "subnet-4998cb3e"]
 }
 
 resource "aws_launch_configuration" "cluster-lc" {
@@ -20,6 +15,7 @@ resource "aws_launch_configuration" "cluster-lc" {
   image_id = "ami-0d839d6b"
   instance_type = "t2.micro"
   iam_instance_profile = "${aws_iam_role.cluster-iam-role.name}"
+  key_name = "dave-rxplatformrefresh"
   associate_public_ip_address = true
   user_data = "${file("userdata.txt")}"
   security_groups = ["${aws_security_group.cluster-security-group.id}"]
@@ -47,18 +43,25 @@ resource "aws_iam_instance_profile" "cluster-iam-profile" {
 resource "aws_security_group" "cluster-security-group" {
   name = "${var.stack_name}"
   description = "Controls access to/from the ECS cluster instances"
+  vpc_id = "vpc-b1bef8d4"
 
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "6"
+    from_port = 80
+    to_port = 80
+    protocol = "6"
+    cidr_blocks = ["92.3.216.110/32"]
+  }
+  ingress {
+    from_port = 3389
+    to_port = 3389
+    protocol = "6"
     cidr_blocks = ["92.3.216.110/32"]
   }
 
   egress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
-    cidr_blocks     = ["0.0.0.0/0"]
+    from_port  = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
