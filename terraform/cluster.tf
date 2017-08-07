@@ -3,7 +3,6 @@ provider "aws" {
   region = "${var.region}"
 }
 
-#
 resource "aws_ecs_cluster" "cluster" {
   name = "${var.stack_name}"
 }
@@ -17,12 +16,16 @@ resource "aws_autoscaling_group" "cluster-asg" {
 }
 
 resource "aws_launch_configuration" "cluster-lc" {
-  name = "${var.stack_name}"
+  name_prefix = "${var.stack_name}"
   image_id = "ami-0d839d6b"
   instance_type = "t2.micro"
   iam_instance_profile = "${aws_iam_role.cluster-iam-role.name}"
   associate_public_ip_address = true
   user_data = "${file("userdata.txt")}"
+  security_groups = ["${aws_security_group.cluster-security-group.id}"]
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_iam_role" "cluster-iam-role" {
@@ -43,7 +46,7 @@ resource "aws_iam_instance_profile" "cluster-iam-profile" {
 
 resource "aws_security_group" "cluster-security-group" {
   name = "${var.stack_name}"
-  desription = "Controls access to/from the ECS cluster instances"
+  description = "Controls access to/from the ECS cluster instances"
 
   ingress {
     from_port   = 80
