@@ -4,9 +4,7 @@ pipeline {
   stages {
     stage('plan') {
       steps {
-        sh 'cd terraform'
-        sh 'pwd'
-        sh 'terraform plan'
+        sh 'terraform plan terraform'
       }
     }
   }
