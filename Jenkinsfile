@@ -5,6 +5,7 @@ pipeline {
     stage('plan') {
       steps {
         sh 'cd terraform'
+        sh 'pwd'
         sh 'terraform plan'
       }
     }
