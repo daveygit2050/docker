@@ -11,6 +11,6 @@
         "hostPort": 80
       }
     ],
-    "command":["c:\\windows\\system32\\cmd.exe"]
+    "command":["powershell.exe -file c:\\Wait-Service.ps1 -ServiceName W3SVC -AllowServiceRestart"]
   }
 ]

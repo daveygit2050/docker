@@ -8,5 +8,8 @@ variable "stack_name" {
   default = "dave-ecs-test-windows"
 }
 variable "cluster_instance_count" {
-  default = 0
+  default = 1
+}
+variable "service_task_count" {
+  default = 1
 }
